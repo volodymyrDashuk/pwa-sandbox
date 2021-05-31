@@ -17,6 +17,21 @@
  * or modify functionality from its dependencies.
  */
 
-function localIntercept() {}
+const { Targetables } = require('@magento/pwa-buildpack')
 
-module.exports = localIntercept;
+module.exports = targets => {
+    const targetables = Targetables.using(targets);
+
+    const MainComponent = targetables.reactComponent(
+        '@magento/venia-ui/lib/components/Main/main.js'
+    );
+
+    const CmsBlock = MainComponent.addImport(
+        "CmsBlock from '@magento/venia-ui/lib/components/CmsBlock'"
+    );
+
+    MainComponent.insertBeforeJSX(
+    '<Footer/>',
+    `<${CmsBlock} identifiers="my-identifiers" />`
+    );
+}
